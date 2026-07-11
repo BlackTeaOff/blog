@@ -1,20 +1,50 @@
 ---
-title: Hello World
-description: Welcome to Hugo Theme Stack
-slug: hello-world
-date: 2022-03-06 00:00:00+0000
-image: cover.jpg
+
+title: "Hello World!"
+
+description: "我的第一篇博客"
+
+date: 2026-07-11T22:05:00+08:00
+
+
+
 categories:
-    - Example Category
+
+- "日常闲聊"
+
 tags:
-    - Example Tag
-weight: 1       # You can add weight to some posts to override the default sorting (date descending)
+
+- "日常"
+
 ---
 
-Welcome to Hugo theme Stack. This is your first post. Edit or delete it, then start writing!
+你好！
 
-For more information about this theme, check the documentation: https://stack.jimmycai.com/
+这是我的第一篇博客。
 
-Want a site like this? Check out [hugo-theme-stack-stater](https://github.com/CaiJimmy/hugo-theme-stack-starter)
+其实没上大学以前(具体来说是在初中)就建过博客，可惜当时对编程还不了解。
 
-> Photo by [Pawel Czerwinski](https://unsplash.com/@pawel_czerwinski) on [Unsplash](https://unsplash.com/)
+什么也没记录，就放在GitHub上了。
+
+你现在还能看到那个[仓库](https://github.com/BlackTeaOff/BlackTeaOff.github.io)，2020年6月4日的。
+
+6年之后，没想到我又来写博客了。
+
+记录生活，Coding...
+
+也许对找工作有帮助？
+
+我也不知道啊。
+
+AI好像要代替人了。
+
+要上演底特律变人了。
+
+扯得有点远了。
+
+今天有点晚了，
+
+下个博客见吧！
+
+~~(是不是有点尬。。。)~~
+
