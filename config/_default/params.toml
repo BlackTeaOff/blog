@@ -50,8 +50,23 @@ SortBy              = "default"
 
 ## Comments
 [comments]
-    enabled  = false
-    provider = "disqus"
+    enabled  = true
+    provider = "giscus"
+
+    [comments.giscus]
+        repo             = "BlackTeaOff/blog"
+        repoID           = "R_kgDOTVbJRQ"
+        category         = "Announcements"
+        categoryID       = "DIC_kwDOTVbJRc4DBZbH"
+        mapping          = "pathname"
+        lightTheme       = "light"
+        darkTheme        = "dark_dimmed"
+        reactionsEnabled = 1
+        emitMetadata     = 0
+        inputPosition    = "top"
+        lang             = "zh-CN"
+        strict           = 0
+        loading          = "lazy"
 
     # See all the available configurations at https://github.com/CaiJimmy/hugo-theme-stack/blob/master/config/_default/params.toml
     # Copy the configurations you need from there and paste it here.
