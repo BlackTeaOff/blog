@@ -159,6 +159,26 @@ Python 中能把字典转为 json，使用 dump 方法。
 
 用某个字符把字符串分割成若干部分。
 
+### join 方法
+
+用于将可迭代的对象（列表，元组，字符串等）中的元素用指定的分隔符连接成一个新的字符串。
+
+例:
+
+```python
+# 用逗号和空格连接列表元素
+words = ["Apple", "Banana", "Orange"]
+result = ", ".join(words)
+print(result)  
+# 输出: Apple, Banana, Orange
+
+# 直接拼接，不使用任何分隔符
+chars = ["P", "y", "t", "h", "o", "n"]
+result = "".join(chars)
+print(result)  
+# 输出: Python
+```
+
 
 
 ## 代码
@@ -186,4 +206,3 @@ data_dict: dict = {}
 把内存中的字典写回文件。（数据字典文件）
 
 > 使用 json.dump
-
