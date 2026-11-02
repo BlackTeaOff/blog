@@ -39,7 +39,6 @@ tags:
 > 
 > 私密马赛，正文**来了**。 
 
-
 # Electron-demo
 
 ## 结构
@@ -328,3 +327,107 @@ const api = {
 - window.console.log()，平时简写成 console.log
 
 在 preload 里定义的 api 也挂在这里。
+
+#### ipcRenderer
+
+- IPC = Inter-Process-Communication（进程间通信）
+- `ipcRenderer` = 给渲染进程（前端）专门使用的 “对讲机”
+
+##### 使用方法
+
+###### send（只喊一声，不等回复）
+
+前端发送：
+
+```typescript
+// 在 Preload 里写
+ipcRenderer.send('信道名称: string', '...args(任意类型, 给主进程发送的数据)')
+```
+
+后端接收：
+
+```typescript
+// main
+ipcMain.on('信道名称: string', (event, data) => {
+    // 处理逻辑
+})
+```
+
+###### invoke（请求并等待回复）
+
+相当于 fetch。
+
+代码写法：
+
+```typescript
+// Preload
+// invoke 返回一个 Promise
+const result = await ipcRenderer.invoke('信道名称: string', '...args')
+```
+
+后端写法：
+
+```typescript
+ipcMain.handle('信道名称: string', async (event, data) => {
+	const result = ['你好', '再见']
+	return result
+})
+```
+
+可以异步也可以同步（写 await / async 或者不写）
+
+> 当你不需要 event 里面的东西时，把 event 变成 _event，代表不会在函数体里面使用
+>
+> vscode 不会报错（声明但未使用）
+
+##### 异步
+
+当线程需要执行某些**耗时**的操作（如从网络获取，读取文件等等），
+
+会使用**异步函数**（async），使得该线程不需要在这里等这些操作完成，而是去干其他事情（刷新界面）。
+
+###### .then
+
+Promise 对象的专属方法。
+
+举个例子：
+
+```typescript
+processLogin()
+  .then((user) => {
+    console.log("1. 登录成功，拿到了用户：", user.name);
+    return ipcRenderer.invoke('get-history', user.id); // 返回一个新的异步任务
+  })
+  .then((history) => {
+    console.log("2. 历史数据也拿到了：", history);
+    renderPage(history); // 3. 执行最终渲染
+  })
+  .catch((err) => {
+    console.error("以上任何一个步骤不满足条件（报错），都会直接跳到这里！");
+  });
+```
+
+processLogin() 必须返回一个 Promise 对象，等这个 Promise 对象的状态变成 fulfilled 之后，
+
+`.then` 把这个 Promise 对象拆开放在 user 里，交给回调函数使用。
+
+`.then` 能链式调用，上一个 `.then` 里面返回一个 Promise，可以被下一个 `.then` 使用。
+
+`.then` 也规定了执行顺序，先等待哪些资源准备好，再执行某些函数。
+
+如果 `.then()` 里面什么都不写，会把这个 Promise 对象传给下一个链式调用的 `.then`
+
+###### Promise对象
+
+- pending：进行中
+- fulfilled：成功
+- rejected：失败
+
+###### await
+
+实际上还是用 `.then` 实现先等某个资源获取到，再执行下面的函数。
+
+但是它既能接收 Promise，也能接收其他普通类型的东西，`.then` 只能在 Promise 上使用。（因为是 Promise 的一个方法）
+
+
+
