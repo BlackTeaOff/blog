@@ -429,5 +429,107 @@ processLogin() 必须返回一个 Promise 对象，等这个 Promise 对象的�
 
 但是它既能接收 Promise，也能接收其他普通类型的东西，`.then` 只能在 Promise 上使用。（因为是 Promise 的一个方法）
 
+### 输入
 
+在 React 里输入框的实现是通过 `一个状态 + <input>`
 
+```typescript
+function InputDemo() {
+    const [text, setText] = useState<string>('')
+    
+    return (
+        <div>
+        	<input
+        		type="text"
+        		// 把输入框里的值和 React 的 text 变量绑定
+        		// 更改 text 变量就可以更改里面的值
+        		value={text}
+				// 调用状态更改函数
+				// {} 当成 JavaScript 表达式来解释
+				// e.target: 触发事件的源头, 这里是 <input> 标签本身
+				onChange={(e) => setText(e.target.value)}
+                className="border p-2 rounded"
+        	/>
+			// React 的 JSX 语法里, 所有标签必须闭合
+			// 可以自闭合 <input/>, 也可以用标准成对写法
+                    
+			<p>输入的内容是: {text}</p>
+        </div>
+    )
+}
+```
+
+### .d.ts
+
+只存放声明的文件。
+
+声明的东西已经存在，只是让 TypeScript 认识一下，编译不报错。
+
+比如说 window。
+
+```
+declare global {
+  interface Window {
+    electron: ElectronAPI
+    api: {
+      saveFlip: (result: string) => void
+    }
+  }
+}
+```
+
+> declare global 是为了让在写了 import 的 d.ts 里面的声明仍然全局生效
+>
+> 否则只在当前文件生效。（不写 import 就没问题，仍然全局生效）
+
+不写这个 TypeScript 不知道 Window 的存在，（运行时 contextBridge 才会把 api 放进 window）
+
+只能 `;(window as any).api.saveFlip(isHead)` 
+
+因为没运行的时候 window 没有 api 这个属性，只能用 any 放行。
+
+### interface 和 type
+
+TypeScript 里的接口能被实现（像大多数语言那样），但是常用他来作为一个 “结构体”。
+
+或者用 type 也行。
+
+```typescript
+interface Todo {
+	id: number
+	title: string
+}
+
+type Todo = {
+	id: number
+	title: string
+}
+```
+
+#### 什么时候用 type
+
+##### 联合类型
+
+```typescript
+type CoinResult = '正面 | 背面'
+type Status = 'loading' | 'success' | 'error'
+type ID = string | number
+```
+
+#### 什么时候用 interface
+
+##### 声明合并
+
+```typescript
+declare global {
+	interface Window {
+		api: {
+			saveFlip: (result: string) => void
+		}
+	}
+}
+```
+
+这个会与其他的 window 接口进行合并成一个大的接口。
+
+扩展 window 的能力。
