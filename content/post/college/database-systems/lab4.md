@@ -151,3 +151,68 @@ tables_data = []，存每个表的行数据：[[student 的所有行], [course �
 
 格式：`{"type": "JOIN/VALUE", "left_idx": ..., "right_idx": ..., "op": "...", "val": ..., "val_type": "..."}`
 
+实际上是把每个条件翻译成**键值对**，这样后面好读取。
+
+#### find_col_index
+
+用来找属性在表中是第几个属性，这个索引能直接在数据中定位到对应的值。
+
+可能会有多个表，里面的属性名会重复，所以会检查格式是不是 `表名.属性名`
+
+如果格式是 `表名.属性名`，直接去 all_headers 里找对应属性，并用 index 返回索引。
+
+all_headers 里存的格式也是 `表名.属性名`。
+
+如果没写表名，只有属性名，需要看看是不是有重名的属性。
+
+如果有就不行。（count  > 1）
+
+最后返回。
+
+#### 根据条件保留/删除行
+
+filtered_result 存储根据条件要保留的行。
+
+遍历 result（笛卡尔积之后得到的所有数据，格式是[[属性一，属性二]，[属性一，属性二]......]）
+
+取出 line（[属性一，属性二]），keep 代表要不要留这一行。
+
+之后遍历每个条件，如果有一个条件不符合，就直接 break 到下一行数据。
+
+因为 result 的信息都是从文件里读取出来的（spilt(","))），所以每个值都是字符串类型。
+
+在判断每个条件符不符合的时候，要看给的条件右面值的类型去判断。
+
+如果右面的类型是 int，需要先把左边的转为 int 之后在比较。（默认是 string）
+
+如果不是 int，就直接比较。（按照 string 比较）
+
+### SELECT 阶段
+
+`final_headers` - 存放投影之后的各属性的列名。（格式：["header1, header2"......]）
+
+`final_rows` - 存放投影之后各属性的值。（格式：[[属性1, 属性2], [属性1, 属性2]）
+
+里面的每一个嵌套列表标识一个行的数据。
+
+如果用户输入 *，直接让 `final_headers = all_headers`，`final_rows = result`
+
+不是的话，用 properties_index 存放用户输入每一个列名在表里的 index，
+
+遍历用户输入的 properties，用之前的 `find_col_index`找到对应的 index，append 到 properties_index。
+
+之后遍历 properties_index，把 all_headers 里对应 index 的值（列名）取出来 append 到 final_headers。
+
+这样就有了所有投影出来的列名。
+
+接下来投影数据。
+
+遍历 result（笛卡尔积之后得到的一行一行数据，格式：[[属性1, 属性2], [属性1, 属性2]）的每一行 row。
+
+row 的格式是一个列表，包含每一行的数据。
+
+用 r 存从 row 里投影完的一行。
+
+遍历 properties_index，把该行下标在 properties_index 里的数据取出来 append 到 r 里。
+
+最后把投影完的一行 r append 到 final_rows 里。
